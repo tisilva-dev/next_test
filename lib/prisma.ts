@@ -14,7 +14,7 @@ declare global {
 }
 
 /**
- * Instância do cliente Prisma
+ * Cria uma única instância do PrismaClient
  * 
  * Se estiver em produção, usa a instância global se existir,
  * ou cria uma nova instância.
@@ -22,10 +22,8 @@ declare global {
  * Em desenvolvimento, armazena a instância na variável global
  * para evitar múltiplas conexões durante o hot-reload.
  */
-const prisma = global.prisma || new PrismaClient()
+export const prisma = global.prisma || new PrismaClient()
 
 if (process.env.NODE_ENV !== 'production') {
     global.prisma = prisma
-}
-
-export default prisma; 
+} 

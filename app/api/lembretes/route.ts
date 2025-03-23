@@ -1,6 +1,17 @@
 import { NextResponse } from 'next/server'
-import prisma from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
+import { z } from 'zod'
 
+// Schema de validação para criar/atualizar lembretes
+const LembreteSchema = z.object({
+    texto: z.string().min(1, 'O texto é obrigatório').max(500, 'O texto deve ter no máximo 500 caracteres'),
+    data: z.string().refine((data) => {
+        const date = new Date(data)
+        return !isNaN(date.getTime())
+    }, 'Data inválida'),
+})
+
+// Cache em memória para melhorar performance
 /**
  * Rota GET /api/lembretes
  * Retorna todos os lembretes ordenados por data
@@ -21,8 +32,7 @@ import prisma from '@/lib/prisma'
  */
 export async function GET() {
     try {
-        // findMany é um método do Prisma que retorna todos os registros
-        // orderBy ordena os resultados pelo campo data em ordem ascendente
+        console.log('Iniciando busca de lembretes...')
         const lembretes = await prisma.lembrete.findMany({
             orderBy: {
                 data: 'asc'
@@ -31,7 +41,7 @@ export async function GET() {
         console.log('Lembretes encontrados:', lembretes)
         return NextResponse.json(lembretes)
     } catch (error) {
-        console.error('Erro ao buscar lembretes:', error)
+        console.error('Erro detalhado ao buscar lembretes:', error)
         return NextResponse.json(
             { error: 'Erro ao buscar lembretes', details: error instanceof Error ? error.message : 'Erro desconhecido' },
             { status: 500 }
@@ -115,31 +125,73 @@ export async function POST(request: Request) {
  */
 export async function DELETE(request: Request) {
     try {
-        // URL e searchParams são APIs do navegador para manipular URLs
+        console.log('Iniciando rota DELETE');
         const { searchParams } = new URL(request.url)
         const id = searchParams.get('id')
+        console.log('ID recebido:', id);
 
         // Validação do ID
         if (!id) {
+            console.log('ID não fornecido');
             return NextResponse.json(
                 { error: 'ID é obrigatório' },
                 { status: 400 }
             )
         }
 
+        // Validação do formato do ID
+        const idNumero = Number(id);
+        if (isNaN(idNumero)) {
+            console.log('ID inválido:', id);
+            return NextResponse.json(
+                { error: 'ID inválido' },
+                { status: 400 }
+            )
+        }
+
+        console.log('Buscando lembrete para deletar...');
+        // Verifica se o lembrete existe antes de tentar deletar
+        const lembreteExistente = await prisma.lembrete.findUnique({
+            where: {
+                id: idNumero
+            }
+        });
+
+        if (!lembreteExistente) {
+            console.log('Lembrete não encontrado com ID:', idNumero);
+            return NextResponse.json(
+                { error: 'Lembrete não encontrado' },
+                { status: 404 }
+            )
+        }
+
+        console.log('Lembrete encontrado:', lembreteExistente);
+        console.log('Tentando deletar lembrete...');
+
         // delete é um método do Prisma que remove um registro
-        // where especifica qual registro deve ser deletado
         const lembrete = await prisma.lembrete.delete({
             where: {
-                id: Number(id)
+                id: idNumero
             }
         })
 
-        return NextResponse.json(lembrete)
+        console.log('Lembrete deletado com sucesso:', lembrete);
+        return NextResponse.json({
+            message: 'Lembrete deletado com sucesso',
+            lembrete
+        })
     } catch (error) {
-        console.error('Erro ao deletar lembrete:', error)
+        console.error('Erro detalhado ao deletar lembrete:', error)
+        // Verifica se é um erro do Prisma
+        if (error instanceof Error) {
+            console.error('Mensagem de erro:', error.message);
+            console.error('Stack trace:', error.stack);
+        }
         return NextResponse.json(
-            { error: 'Erro ao deletar lembrete', details: error instanceof Error ? error.message : 'Erro desconhecido' },
+            {
+                error: 'Erro ao deletar lembrete',
+                details: error instanceof Error ? error.message : 'Erro desconhecido'
+            },
             { status: 500 }
         )
     }

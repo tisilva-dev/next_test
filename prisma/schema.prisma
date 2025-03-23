@@ -41,13 +41,31 @@ datasource db {
  * - data: para otimizar consultas por data
  */
 model Lembrete {
-  id        Int      @id @default(autoincrement()) // ID único, auto-incrementado
-  texto     String // Campo de texto do lembrete
-  data      DateTime // Campo de data do lembrete
-  createdAt DateTime @default(now()) // Data de criação, preenchida automaticamente
-  updatedAt DateTime @updatedAt // Data de atualização, atualizada automaticamente
+  id          Int        @id @default(autoincrement())
+  texto       String     @db.Text
+  data        DateTime
+  prioridade  Int        @default(0) // 0: baixa, 1: média, 2: alta
+  concluido   Boolean    @default(false)
+  categoria   String? // Categoria opcional do lembrete
+  descricao   String?    @db.Text // Descrição detalhada opcional
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  Categoria   Categoria? @relation(fields: [categoriaId], references: [id])
+  categoriaId Int?
 
-  // Índices para melhorar a performance das consultas
+  // Índices para melhorar performance
   @@index([data])
-  @@index([createdAt])
+  @@index([prioridade])
+  @@index([concluido])
+  @@index([categoria])
+}
+
+// Modelo de Categoria para organizar lembretes
+model Categoria {
+  id        Int        @id @default(autoincrement())
+  nome      String     @unique
+  cor       String? // Cor para identificação visual
+  lembretes Lembrete[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }

@@ -16,7 +16,8 @@
  * Define box-sizing como border-box
  * Aplica antialiasing para melhor renderização
  */
-@import "tailwindcss/preflight";
+@tailwind base;
+@tailwind components;
 @tailwind utilities;
 
 /**
@@ -24,16 +25,41 @@
  * 
  * Define cores padrão para o tema claro:
  * - foreground-rgb: cor do texto (preto)
- * - background-start-rgb: cor inicial do gradiente
- * - background-end-rgb: cor final do gradiente
- * 
- * As cores são definidas em RGB para permitir
- * transparência e manipulação via JavaScript
+ * - background-rgb: cor do fundo (branco)
  */
 :root {
-    --foreground-rgb: 0, 0, 0;
-    --background-start-rgb: 214, 219, 220;
-    --background-end-rgb: 255, 255, 255;
+    /* Cores principais */
+    --foreground-rgb: 30, 64, 175;
+    --background-rgb: 249, 250, 251;
+    --primary-color: 37, 99, 235;
+    --secondary-color: 59, 130, 246;
+    --success-color: 34, 197, 94;
+    --warning-color: 234, 179, 8;
+    --danger-color: 239, 68, 68;
+
+    /* Cores de texto */
+    --text-primary: 30, 64, 175;
+    --text-secondary: 37, 99, 235;
+    --text-light: 59, 130, 246;
+
+    /* Cores de fundo */
+    --bg-primary: 255, 255, 255;
+    --bg-secondary: 249, 250, 251;
+    --bg-tertiary: 243, 244, 246;
+
+    /* Cores de borda */
+    --border-color: 229, 231, 235;
+    --border-focus: 37, 99, 235;
+
+    /* Cores de status */
+    --status-success: 34, 197, 94;
+    --status-warning: 234, 179, 8;
+    --status-error: 239, 68, 68;
+
+    /* Cores de prioridade */
+    --priority-high: 239, 68, 68;
+    --priority-medium: 234, 179, 8;
+    --priority-low: 34, 197, 94;
 }
 
 /**
@@ -42,16 +68,26 @@
  * Define cores diferentes quando o sistema
  * está em modo escuro usando a media query
  * prefers-color-scheme
- * 
- * As cores são invertidas:
- * - Texto branco sobre fundo escuro
- * - Gradiente do escuro para mais escuro
  */
 @media (prefers-color-scheme: dark) {
     :root {
-        --foreground-rgb: 255, 255, 255;
-        --background-start-rgb: 0, 0, 0;
-        --background-end-rgb: 0, 0, 0;
+        /* Cores principais */
+        --foreground-rgb: 96, 165, 250;
+        --background-rgb: 17, 24, 39;
+
+        /* Cores de texto */
+        --text-primary: 96, 165, 250;
+        --text-secondary: 147, 197, 253;
+        --text-light: 191, 219, 254;
+
+        /* Cores de fundo */
+        --bg-primary: 31, 41, 55;
+        --bg-secondary: 17, 24, 39;
+        --bg-tertiary: 55, 65, 81;
+
+        /* Cores de borda */
+        --border-color: 75, 85, 99;
+        --border-focus: 96, 165, 250;
     }
 }
 
@@ -60,21 +96,132 @@
  * 
  * Aplica cores de texto e fundo usando as variáveis CSS
  * Define altura mínima como 100vh (100% da altura da viewport)
- * 
- * O gradiente é criado usando:
- * - linear-gradient: cria um gradiente linear
- * - to bottom: direção do gradiente (de cima para baixo)
- * - transparent: começa transparente
- * - rgb(var(--background-end-rgb)): termina com a cor final
- * 
- * O min-height: 100vh garante que o conteúdo ocupe
- * pelo menos toda a altura da tela, evitando scroll
- * desnecessário em páginas com pouco conteúdo
  */
 body {
-    color: rgb(var(--foreground-rgb));
-    background: linear-gradient(to bottom,
-            transparent,
-            rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+    color: rgb(var(--text-primary));
+    background: rgb(var(--background-rgb));
     min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Estilos específicos para o container principal */
+.main-container {
+    min-height: 100vh;
+    width: 100%;
+    background: rgb(var(--background-rgb));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Classes utilitárias personalizadas */
+@layer components {
+    .btn {
+        @apply px-4 py-2 rounded-lg font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+    }
+
+    .btn-primary {
+        @apply bg-blue-700 text-white hover:bg-blue-800;
+    }
+
+    .btn-secondary {
+        @apply bg-blue-600 text-white hover:bg-blue-700;
+    }
+
+    .btn-success {
+        @apply bg-green-500 text-white hover:bg-green-600;
+    }
+
+    .btn-warning {
+        @apply bg-yellow-500 text-white hover:bg-yellow-600;
+    }
+
+    .btn-danger {
+        @apply bg-red-500 text-white hover:bg-red-600;
+    }
+
+    .input {
+        @apply w-full px-4 py-2 rounded-lg border border-gray-300 bg-white text-blue-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-colors duration-200;
+    }
+
+    .input-dark {
+        @apply bg-gray-800 text-blue-100 border-gray-700;
+    }
+
+    .input-error {
+        @apply border-red-500 focus:ring-red-500;
+    }
+
+    .card {
+        @apply bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-200;
+    }
+
+    .card-dark {
+        @apply bg-gray-800 text-blue-100;
+    }
+
+    .badge {
+        @apply px-2 py-1 rounded-full text-xs font-medium;
+    }
+
+    .badge-priority-high {
+        @apply bg-red-100 text-red-800;
+    }
+
+    .badge-priority-medium {
+        @apply bg-yellow-100 text-yellow-800;
+    }
+
+    .badge-priority-low {
+        @apply bg-green-100 text-green-800;
+    }
+
+    .container-custom {
+        @apply container mx-auto px-4 max-w-7xl;
+    }
+}
+
+/* Animações */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgb(var(--bg-secondary));
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(var(--text-secondary));
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--text-primary));
+}
+
+/* Seleção de texto */
+::selection {
+    background: rgb(var(--primary-color));
+    color: white;
 }
