@@ -1,2 +1,80 @@
-@import "tailwindcss";
+/**
+ * Estilos globais da aplicação
+ * 
+ * Este arquivo define estilos que são aplicados
+ * em toda a aplicação, independente do componente.
+ * 
+ * Os estilos são escritos usando Tailwind CSS,
+ * um framework de CSS utilitário que permite
+ * criar designs responsivos e modernos.
+ */
 
+/**
+ * Reset e configurações base
+ * 
+ * Remove margens e paddings padrão
+ * Define box-sizing como border-box
+ * Aplica antialiasing para melhor renderização
+ */
+@import "tailwindcss/preflight";
+@tailwind utilities;
+
+/**
+ * Variáveis CSS globais
+ * 
+ * Define cores padrão para o tema claro:
+ * - foreground-rgb: cor do texto (preto)
+ * - background-start-rgb: cor inicial do gradiente
+ * - background-end-rgb: cor final do gradiente
+ * 
+ * As cores são definidas em RGB para permitir
+ * transparência e manipulação via JavaScript
+ */
+:root {
+    --foreground-rgb: 0, 0, 0;
+    --background-start-rgb: 214, 219, 220;
+    --background-end-rgb: 255, 255, 255;
+}
+
+/**
+ * Estilos para modo escuro
+ * 
+ * Define cores diferentes quando o sistema
+ * está em modo escuro usando a media query
+ * prefers-color-scheme
+ * 
+ * As cores são invertidas:
+ * - Texto branco sobre fundo escuro
+ * - Gradiente do escuro para mais escuro
+ */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --foreground-rgb: 255, 255, 255;
+        --background-start-rgb: 0, 0, 0;
+        --background-end-rgb: 0, 0, 0;
+    }
+}
+
+/**
+ * Estilos do corpo da página
+ * 
+ * Aplica cores de texto e fundo usando as variáveis CSS
+ * Define altura mínima como 100vh (100% da altura da viewport)
+ * 
+ * O gradiente é criado usando:
+ * - linear-gradient: cria um gradiente linear
+ * - to bottom: direção do gradiente (de cima para baixo)
+ * - transparent: começa transparente
+ * - rgb(var(--background-end-rgb)): termina com a cor final
+ * 
+ * O min-height: 100vh garante que o conteúdo ocupe
+ * pelo menos toda a altura da tela, evitando scroll
+ * desnecessário em páginas com pouco conteúdo
+ */
+body {
+    color: rgb(var(--foreground-rgb));
+    background: linear-gradient(to bottom,
+            transparent,
+            rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+    min-height: 100vh;
+}

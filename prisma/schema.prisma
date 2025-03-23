@@ -4,6 +4,21 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+/**
+ * Este arquivo define o schema do banco de dados usando Prisma
+ * O Prisma é um ORM (Object-Relational Mapping) que permite trabalhar
+ * com o banco de dados usando TypeScript de forma type-safe.
+ * Este schema define:
+ * 1. A conexão com o banco de dados (PostgreSQL)
+ * 2. O modelo de dados (Lembrete)
+ * 3. As configurações de geração do cliente Prisma
+ */
+
+/**
+ * Define o provedor do banco de dados e a URL de conexão
+ * A URL é obtida da variável de ambiente DATABASE_URL
+ * Formato: postgresql://usuario:senha@host:porta/banco
+ */
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,10 +28,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+/**
+ * Modelo Lembrete
+ * Define a estrutura da tabela de lembretes no banco de dados
+ * Campos:
+ * - id: identificador único, incrementado automaticamente
+ * - texto: conteúdo do lembrete
+ * - data: data do lembrete
+ * - createdAt: data de criação do registro
+ * - updatedAt: data da última atualização
+ * Índices:
+ * - data: para otimizar consultas por data
+ */
 model Lembrete {
-  id        Int      @id @default(autoincrement())
-  texto     String
-  data      DateTime
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        Int      @id @default(autoincrement()) // ID único, auto-incrementado
+  texto     String // Campo de texto do lembrete
+  data      DateTime // Campo de data do lembrete
+  createdAt DateTime @default(now()) // Data de criação, preenchida automaticamente
+  updatedAt DateTime @updatedAt // Data de atualização, atualizada automaticamente
+
+  // Índices para melhorar a performance das consultas
+  @@index([data])
+  @@index([createdAt])
 }
