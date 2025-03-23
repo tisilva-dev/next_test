@@ -1,7 +1,3 @@
-//teste
-
-//teste2
-
 'use client'
 
 import { useState } from "react";
