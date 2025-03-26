@@ -1,13 +1,58 @@
+/**
+ * Configuração do Tailwind CSS
+ * 
+ * Este arquivo define as configurações do Tailwind CSS,
+ * incluindo:
+ * - Conteúdo a ser processado
+ * - Tema personalizado
+ * - Plugins
+ * - Modo escuro
+ */
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  /**
+   * Define quais arquivos devem ser processados pelo Tailwind
+   * 
+   * Inclui:
+   * - Arquivos de páginas
+   * - Arquivos de componentes
+   * - Arquivos de estilos
+   * - Arquivos Markdown
+   */
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+
+  /**
+   * Configuração do modo escuro
+   * 
+   * 'media': Usa a preferência do sistema operacional
+   * 'class': Usa uma classe CSS para controlar o modo
+   */
   darkMode: 'media',
+
+  /**
+   * Configuração do tema
+   * 
+   * Define:
+   * - Cores personalizadas
+   * - Animações
+   * - Keyframes
+   * - Outras extensões do tema
+   */
   theme: {
     extend: {
+      /**
+       * Cores personalizadas
+       * 
+       * Usa variáveis CSS para permitir:
+       * - Mudança dinâmica de cores
+       * - Suporte a transparência
+       * - Consistência em toda a aplicação
+       */
       colors: {
         primary: 'rgb(var(--primary-color) / <alpha-value>)',
         secondary: 'rgb(var(--secondary-color) / <alpha-value>)',
@@ -27,9 +72,23 @@ module.exports = {
           900: 'rgb(var(--gray-900) / <alpha-value>)',
         },
       },
+
+      /**
+       * Animações personalizadas
+       * 
+       * Define animações reutilizáveis
+       * para melhor experiência do usuário
+       */
       animation: {
         'fade-in': 'fadeIn 0.3s ease-out forwards',
       },
+
+      /**
+       * Keyframes para animações
+       * 
+       * Define os pontos de início e fim
+       * das animações personalizadas
+       */
       keyframes: {
         fadeIn: {
           '0%': { opacity: '0', transform: 'translateY(10px)' },
@@ -38,5 +97,12 @@ module.exports = {
       },
     },
   },
+
+  /**
+   * Plugins do Tailwind
+   * 
+   * Adiciona funcionalidades extras
+   * ao framework
+   */
   plugins: [],
 }

@@ -225,3 +225,77 @@ body {
     background: rgb(var(--primary-color));
     color: white;
 }
+
+/* Estilos para o react-datepicker */
+.react-datepicker {
+  @apply bg-white border border-gray-200 rounded-lg shadow-lg p-4 z-[9999] relative;
+}
+
+.react-datepicker__header {
+  @apply bg-transparent border-none mb-4;
+}
+
+.react-datepicker__month-container {
+  @apply float-none;
+}
+
+.react-datepicker__navigation {
+  @apply top-4;
+}
+
+.react-datepicker__navigation--previous {
+  @apply left-4;
+}
+
+.react-datepicker__navigation--next {
+  @apply right-4;
+}
+
+.react-datepicker__current-month {
+  @apply text-lg font-semibold text-gray-800 mb-4;
+}
+
+.react-datepicker__day-names {
+  @apply grid grid-cols-7 gap-1 mb-2;
+}
+
+.react-datepicker__day-name {
+  @apply text-sm font-medium text-gray-500 w-8 h-8 flex items-center justify-center;
+}
+
+.react-datepicker__days-container {
+  @apply grid grid-cols-7 gap-1;
+}
+
+.react-datepicker__day {
+  @apply w-8 h-8 flex items-center justify-center rounded-full hover:bg-blue-50 transition-colors;
+}
+
+.react-datepicker__day--selected {
+  @apply bg-blue-500 text-white hover:bg-blue-600;
+}
+
+.react-datepicker__day--today {
+  @apply font-semibold text-blue-500;
+}
+
+.react-datepicker__day--disabled {
+  @apply text-gray-300 cursor-not-allowed hover:bg-transparent;
+}
+
+.react-datepicker__input-container {
+  @apply relative;
+}
+
+.react-datepicker-popper {
+  @apply z-[9999] !important;
+}
+
+/* Ajuste do z-index dos lembretes */
+.space-y-4 {
+  @apply relative z-0;
+}
+
+.bg-white.rounded-xl {
+  @apply relative z-0;
+}

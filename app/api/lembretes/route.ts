@@ -5,10 +5,7 @@ import { z } from 'zod'
 // Schema de validação para criar/atualizar lembretes
 const LembreteSchema = z.object({
     texto: z.string().min(1, 'O texto é obrigatório').max(500, 'O texto deve ter no máximo 500 caracteres'),
-    data: z.string().refine((data) => {
-        const date = new Date(data)
-        return !isNaN(date.getTime())
-    }, 'Data inválida'),
+    data: z.string(), // Aceita qualquer string como data
 })
 
 // Cache em memória para melhorar performance
@@ -70,22 +67,14 @@ export async function GET() {
  */
 export async function POST(request: Request) {
     try {
-        // request.json() converte o corpo da requisição em um objeto JavaScript
         const body = await request.json()
-        const { texto, data } = body
+        console.log('Dados recebidos:', body)
 
-        console.log('Dados recebidos:', { texto, data })
+        // Valida apenas o texto, não valida a data
+        const validatedData = LembreteSchema.parse(body)
+        const { texto, data } = validatedData
 
-        // Validação dos campos obrigatórios
-        if (!texto || !data) {
-            return NextResponse.json(
-                { error: 'Texto e data são obrigatórios' },
-                { status: 400 }
-            )
-        }
-
-        // create é um método do Prisma que insere um novo registro
-        // new Date(data) converte a string ISO em um objeto Date
+        // Cria o lembrete no banco
         const lembrete = await prisma.lembrete.create({
             data: {
                 texto,
@@ -97,8 +86,14 @@ export async function POST(request: Request) {
         return NextResponse.json(lembrete)
     } catch (error) {
         console.error('Erro ao criar lembrete:', error)
+        if (error instanceof z.ZodError) {
+            return NextResponse.json(
+                { error: error.errors[0].message },
+                { status: 400 }
+            )
+        }
         return NextResponse.json(
-            { error: 'Erro ao criar lembrete', details: error instanceof Error ? error.message : 'Erro desconhecido' },
+            { error: 'Erro ao criar lembrete' },
             { status: 500 }
         )
     }
